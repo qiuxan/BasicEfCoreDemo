@@ -23,9 +23,11 @@ namespace BasicEfCoreDemo.Controllers
 
         // GET: api/Invoices
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Invoice>>> GetInvoices()
+        public async Task<ActionResult<IEnumerable<Invoice>>> GetInvoices(InvoiceStatus? status)
         {
-            return await _context.Invoices.ToListAsync();
+            return await _context.Invoices
+                .Where(x=>status == null || x.Status == status)
+                .ToListAsync();
         }
 
         // GET: api/Invoices/5
