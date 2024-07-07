@@ -87,6 +87,11 @@ namespace BasicEfCoreDemo.Controllers
         [HttpPost]
         public async Task<ActionResult<Invoice>> PostInvoice(Invoice invoice)
         {
+            if (_context.Invoices == null)
+            {
+                return Problem("Entity set 'InvoiceDbContext.Invoices' is null.");
+            }
+
             _context.Invoices.Add(invoice);
             await _context.SaveChangesAsync();
 
