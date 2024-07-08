@@ -69,7 +69,8 @@ namespace BasicEfCoreDemo.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!InvoiceExists(id))
+                if (!InvoiceExists
+                    (id))
                 {
                     return NotFound();
                 }
@@ -108,7 +109,10 @@ namespace BasicEfCoreDemo.Controllers
                 return NotFound();
             }
 
-            _context.Invoices.Remove(invoice);
+            //_context.Invoices.Remove(invoice);
+
+            _context.Entry(invoice).State = EntityState.Deleted;
+
             await _context.SaveChangesAsync();
 
             return NoContent();
