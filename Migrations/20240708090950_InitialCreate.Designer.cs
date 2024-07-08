@@ -11,9 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BasicEfCoreDemo.Migrations
 {
-    [DbContext(typeof(InvoiceDbContext))]
-    [Migration("20240706014815_AddSeedData")]
-    partial class AddSeedData
+    [DbContext(typeof(SampleDbContext))]
+    [Migration("20240708090950_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,66 +33,126 @@ namespace BasicEfCoreDemo.Migrations
                         .HasColumnName("Id");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("Amount");
 
                     b.Property<string>("ContactName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)")
+                        .HasColumnName("ContactName");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("Description");
 
                     b.Property<DateTimeOffset>("DueDate")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DueDate");
 
                     b.Property<DateTimeOffset>("InvoiceDate")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("InvoiceDate");
 
                     b.Property<string>("InvoiceNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(32)")
+                        .HasColumnName("InvoiceNumber");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)")
+                        .HasColumnName("Status");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoices", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("abce784a-9808-483e-8cc5-520c8789236e"),
+                            Id = new Guid("f22ee3b8-100f-4cb2-9548-ea137f9e50cf"),
                             Amount = 100m,
                             ContactName = "Iron Man",
                             Description = "Invoice for the first month",
                             DueDate = new DateTimeOffset(new DateTime(2021, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             InvoiceDate = new DateTimeOffset(new DateTime(2021, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             InvoiceNumber = "INV-001",
-                            Status = 4
+                            Status = "AwaitPayment"
                         },
                         new
                         {
-                            Id = new Guid("a382fc6e-6c84-47cb-a69c-af7f5959056d"),
+                            Id = new Guid("ced9fd77-1b46-4c0e-a9a5-f07d05d2397c"),
                             Amount = 200m,
                             ContactName = "Captain America",
                             Description = "Invoice for the first month",
                             DueDate = new DateTimeOffset(new DateTime(2021, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             InvoiceDate = new DateTimeOffset(new DateTime(2021, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             InvoiceNumber = "INV-002",
-                            Status = 4
+                            Status = "AwaitPayment"
                         },
                         new
                         {
-                            Id = new Guid("a3c41584-5215-4503-912c-acb3664a19df"),
+                            Id = new Guid("7d769f26-e94d-4e39-b12b-10949ec8e481"),
                             Amount = 300m,
                             ContactName = "Thor",
                             Description = "Invoice for the first month",
                             DueDate = new DateTimeOffset(new DateTime(2021, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             InvoiceDate = new DateTimeOffset(new DateTime(2021, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             InvoiceNumber = "INV-003",
-                            Status = 0
+                            Status = "Draft"
                         });
+                });
+
+            modelBuilder.Entity("InvoiceItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("InvoiceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.ToTable("InvoiceItem");
+                });
+
+            modelBuilder.Entity("InvoiceItem", b =>
+                {
+                    b.HasOne("BasicEfCoreDemo.Models.Invoice", "Invoice")
+                        .WithMany("InvoiceItems")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Invoice");
+                });
+
+            modelBuilder.Entity("BasicEfCoreDemo.Models.Invoice", b =>
+                {
+                    b.Navigation("InvoiceItems");
                 });
 #pragma warning restore 612, 618
         }

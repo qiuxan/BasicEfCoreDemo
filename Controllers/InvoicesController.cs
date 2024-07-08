@@ -14,9 +14,9 @@ namespace BasicEfCoreDemo.Controllers
     [ApiController]
     public class InvoicesController : ControllerBase
     {
-        private readonly InvoiceDbContext _context;
+        private readonly SampleDbContext _context;
 
-        public InvoicesController(InvoiceDbContext context)
+        public InvoicesController(SampleDbContext context)
         {
             _context = context;
         }

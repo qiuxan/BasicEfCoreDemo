@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BasicEfCoreDemo.Data
 {
-    public class InvoiceDbContext(DbContextOptions<InvoiceDbContext> options):DbContext(options)
+    public class SampleDbContext(DbContextOptions<SampleDbContext> options):DbContext(options)
     {
         public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceItem> InvoiceItems => Set<InvoiceItem>();
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -72,7 +74,7 @@ namespace BasicEfCoreDemo.Data
             //new InvoiceConfiguration().Configure(modelBuilder.Entity<Invoice>());
 
             // Grouping the configurations
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(InvoiceDbContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(SampleDbContext).Assembly);
         }
     }
 
