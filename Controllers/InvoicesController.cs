@@ -42,7 +42,9 @@ namespace BasicEfCoreDemo.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Invoice>> GetInvoice(Guid id)
         {
-            var invoice = await _context.Invoices.FindAsync(id);
+            var invoice = await _context.Invoices
+                .Include(x => x.InvoiceItems)
+                .SingleOrDefaultAsync(x=>x.Id == id);
 
             if (invoice == null)
             {
