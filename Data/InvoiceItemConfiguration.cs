@@ -13,5 +13,12 @@ public class InvoiceItemConfiguration:IEntityTypeConfiguration<InvoiceItem>
         builder.Property(p => p.Quantity).HasColumnName(nameof(InvoiceItem.Quantity)).HasPrecision(8, 2);
         builder.Property(p => p.Amount).HasColumnName(nameof(InvoiceItem.Amount)).HasPrecision(18, 2);
         builder.Property(p => p.InvoiceId).HasColumnName(nameof(InvoiceItem.InvoiceId));
+
+
+        builder.HasOne(i => i.Invoice)
+            .WithMany(i => i.InvoiceItems)
+            .HasForeignKey(i => i.InvoiceId)
+            .OnDelete(DeleteBehavior.Cascade);
+
     }
 }

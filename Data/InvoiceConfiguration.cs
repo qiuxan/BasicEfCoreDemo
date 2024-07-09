@@ -20,5 +20,9 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
         builder.Property(p => p.Status).HasColumnName("Status").HasMaxLength(16).HasConversion(
             v => v.ToString(),
             v => (InvoiceStatus)Enum.Parse(typeof(InvoiceStatus), v));
+
+        builder.HasMany(x => x.InvoiceItems)
+            .WithOne(x => x.Invoice)
+            .HasForeignKey(x => x.InvoiceId);
     }
 }
