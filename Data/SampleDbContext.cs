@@ -1,9 +1,10 @@
 ﻿using BasicEfCoreDemo.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 namespace BasicEfCoreDemo.Data
 {
-    public class SampleDbContext(DbContextOptions<SampleDbContext> options):DbContext(options)
+    public class SampleDbContext(DbContextOptions<SampleDbContext> options, IConfiguration configuration) :DbContext(options)
     {
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<InvoiceItem> InvoiceItems => Set<InvoiceItem>();
@@ -75,6 +76,13 @@ namespace BasicEfCoreDemo.Data
 
             // Grouping the configurations
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SampleDbContext).Assembly);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                b => b.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
         }
     }
 

@@ -35,7 +35,6 @@ namespace BasicEfCoreDemo.Controllers
                 .OrderByDescending(x=> x.InvoiceDate)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .AsSplitQuery()
                 .ToListAsync();
         }
 
