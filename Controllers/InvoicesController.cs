@@ -29,6 +29,7 @@ namespace BasicEfCoreDemo.Controllers
             InvoiceStatus? status = null)
         {
             return await _context.Invoices
+                .Include(x => x.InvoiceItems)
                 .AsQueryable()
                 .Where(x=>status == null || x.Status == status)
                 .OrderByDescending(x=> x.InvoiceDate)
