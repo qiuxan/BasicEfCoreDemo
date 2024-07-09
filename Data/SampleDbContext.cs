@@ -9,6 +9,11 @@ namespace BasicEfCoreDemo.Data
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<InvoiceItem> InvoiceItems => Set<InvoiceItem>();
 
+        // One-to-One
+        public DbSet<Contact> Contacts => Set<Contact>();
+        public DbSet<Address> Addresses => Set<Address>();
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
