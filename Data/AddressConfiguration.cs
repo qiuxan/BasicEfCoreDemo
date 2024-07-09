@@ -18,8 +18,8 @@ namespace BasicEfCoreDemo.Data
             builder.Property(a => a.ContactId).IsRequired();
             builder.Ignore(a => a.Contact);
             builder.HasOne(a => a.Contact)
-               .WithOne(c => c.Address)
-               .HasForeignKey<Address>(a => a.ContactId);
+                .WithOne(c => c.Address)
+                .HasForeignKey<Address>(a => a.ContactId);
         }
     }
 }

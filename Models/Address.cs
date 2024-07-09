@@ -9,6 +9,6 @@
         public string ZipCode { get; set; } = string.Empty;
         public string Country { get; set; } = string.Empty;
         public Guid ContactId { get; set; }
-        public Contact Contact { get; set; }
+        public Contact? Contact { get; set; }
     }
 }
