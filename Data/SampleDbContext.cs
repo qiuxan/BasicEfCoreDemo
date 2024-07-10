@@ -13,7 +13,9 @@ namespace BasicEfCoreDemo.Data
         public DbSet<Contact> Contacts => Set<Contact>();
         public DbSet<Address> Addresses => Set<Address>();
 
-
+        // Many-to-Many
+        public DbSet<Movie> Movies => Set<Movie>();
+        public DbSet<Actor> Actors => Set<Actor>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
