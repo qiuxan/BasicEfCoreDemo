@@ -7,5 +7,6 @@
         public string? Description { get; set; }
         public int ReleaseYear { get; set; }
         public List<Actor> Actors { get; set; } = new List<Actor>();
+        public List<MovieActor> MovieActors { get; set; } = new();
     }
 }
