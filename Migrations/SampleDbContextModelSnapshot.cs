@@ -22,36 +22,6 @@ namespace BasicEfCoreDemo.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ActorMovie", b =>
-                {
-                    b.Property<Guid>("ActorsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MoviesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ActorsId", "MoviesId");
-
-                    b.HasIndex("MoviesId");
-
-                    b.ToTable("ActorMovie");
-                });
-
-            modelBuilder.Entity("BasicEfCoreDemo.Models.Actor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Actors");
-                });
-
             modelBuilder.Entity("BasicEfCoreDemo.Models.Address", b =>
                 {
                     b.Property<Guid>("Id")
@@ -168,7 +138,7 @@ namespace BasicEfCoreDemo.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8207e19d-694b-4fac-a9fc-2a3c2a535aa4"),
+                            Id = new Guid("2124dff0-06e7-40f4-8632-6350eefb689f"),
                             Amount = 100m,
                             ContactName = "Iron Man",
                             Description = "Invoice for the first month",
@@ -179,7 +149,7 @@ namespace BasicEfCoreDemo.Migrations
                         },
                         new
                         {
-                            Id = new Guid("11ace12b-5a46-4c1e-8189-aae4ac62be41"),
+                            Id = new Guid("b66c9222-bbc8-476e-9ba7-247512c974e2"),
                             Amount = 200m,
                             ContactName = "Captain America",
                             Description = "Invoice for the first month",
@@ -190,7 +160,7 @@ namespace BasicEfCoreDemo.Migrations
                         },
                         new
                         {
-                            Id = new Guid("84aa8c8c-ab85-4173-a1b2-928471549d31"),
+                            Id = new Guid("b56d96ea-2ebf-47fd-a230-04c5b7651a3e"),
                             Amount = 300m,
                             ContactName = "Thor",
                             Description = "Invoice for the first month",
@@ -199,27 +169,6 @@ namespace BasicEfCoreDemo.Migrations
                             InvoiceNumber = "INV-003",
                             Status = "Draft"
                         });
-                });
-
-            modelBuilder.Entity("BasicEfCoreDemo.Models.Movie", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReleaseYear")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Movies");
                 });
 
             modelBuilder.Entity("InvoiceItem", b =>
@@ -264,21 +213,6 @@ namespace BasicEfCoreDemo.Migrations
                     b.HasIndex("InvoiceId");
 
                     b.ToTable("InvoiceItems", (string)null);
-                });
-
-            modelBuilder.Entity("ActorMovie", b =>
-                {
-                    b.HasOne("BasicEfCoreDemo.Models.Actor", null)
-                        .WithMany()
-                        .HasForeignKey("ActorsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BasicEfCoreDemo.Models.Movie", null)
-                        .WithMany()
-                        .HasForeignKey("MoviesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("BasicEfCoreDemo.Models.Address", b =>
