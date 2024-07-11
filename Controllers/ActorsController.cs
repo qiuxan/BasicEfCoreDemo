@@ -100,6 +100,80 @@ namespace BasicEfCoreDemo.Controllers
             return NoContent();
         }
 
+        [HttpPost("{id}/movies/{movieId}")]
+        public async Task<IActionResult> AddMovie(Guid id, Guid movieId)
+        {
+            if (_context.Actors == null)
+            {
+                return NotFound("Actors is null.");
+            }
+
+            var actor = await _context.Actors.Include(x => x.Movies).SingleOrDefaultAsync(x => x.Id == id);
+            if (actor == null)
+            {
+                return NotFound($"Actor with id {id} not found.");
+            }
+
+            var movie = await _context.Movies.FindAsync(movieId);
+            if (movie == null)
+            {
+                return NotFound($"Movie with id {movieId} not found.");
+            }
+
+            if (actor.Movies.Any(x => x.Id == movie.Id))
+            {
+                return Problem($"Movie with id {movieId} already exists for Actor {id}.");
+            }
+
+            actor.Movies.Add(movie);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetActor", new { id = actor.Id }, actor);
+        }
+
+        [HttpDelete("{id}/movies/{movieId}")]
+        public async Task<IActionResult> DeleteMovie(Guid id, Guid movieId)
+        {
+            if (_context.Actors == null)
+            {
+                return NotFound("Actors is null.");
+            }
+
+            var actor = await _context.Actors.Include(x => x.Movies).SingleOrDefaultAsync();
+            if (actor == null)
+            {
+                return NotFound($"Actor with id {id} not found.");
+            }
+
+            var movie = await _context.Movies.FindAsync(movieId);
+            if (movie == null)
+            {
+                return NotFound($"Movie with id {movieId} not found.");
+            }
+
+            actor.Movies.Remove(movie);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpGet("{id}/movies")]
+        public async Task<IActionResult> GetMovies(Guid id)
+        {
+            if (_context.Actors == null)
+            {
+                return NotFound("Actors is null.");
+            }
+
+            var actor = await _context.Actors.Include(x => x.Movies).SingleOrDefaultAsync();
+            if (actor == null)
+            {
+                return NotFound($"Actor with id {id} not found.");
+            }
+
+            return Ok(actor.Movies);
+        }
+
         private bool ActorExists(Guid id)
         {
             return _context.Actors.Any(e => e.Id == id);
