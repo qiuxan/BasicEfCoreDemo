@@ -15,10 +15,12 @@ namespace BasicEfCoreDemo.Controllers
     public class InvoicesController : ControllerBase
     {
         private readonly SampleDbContext _context;
+        private readonly ILogger<InvoicesController> _logger;
 
-        public InvoicesController(SampleDbContext context)
+        public InvoicesController(SampleDbContext context, ILogger<InvoicesController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/Invoices
@@ -42,14 +44,18 @@ namespace BasicEfCoreDemo.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Invoice>> GetInvoice(Guid id)
         {
-            var invoice = await _context.Invoices
-                .Include(x => x.InvoiceItems)
-                .SingleOrDefaultAsync(x=>x.Id == id);
-
-            if (invoice == null)
+            if (_context.Invoices == null)
             {
                 return NotFound();
             }
+            _logger.LogInformation($"Invoice {id} is loading from the database.");
+
+            var invoice = await _context.Invoices.FindAsync(id);
+
+            _logger.LogInformation($"Invoice {invoice?.Id} is loaded from the database.");
+            _logger.LogInformation($"Invoice {id} is loading from the context.");
+            invoice = await _context.Invoices.FindAsync(id);
+            _logger.LogInformation($"Invoice {invoice?.Id} is loaded from the context.");
 
             return invoice;
         }
